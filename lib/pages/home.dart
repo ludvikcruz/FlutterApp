@@ -82,7 +82,20 @@ AppBar buildAppBar(BuildContext context){
                 padding: const EdgeInsets.all(12),
                 child: SvgPicture.asset('assets/icons/Search.svg'),
               ),
-              suffixIcon: Padding(
+              suffixIcon: widget(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    VerticalDivider(
+                      color: Color(0xffDDDADA),
+                      thickness: 0.1,
+                    )
+                  ],
+                  ),
+              ), 
+              
+              
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset('assets/icons/Filter.svg'),
               ),
