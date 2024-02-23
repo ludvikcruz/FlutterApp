@@ -1,8 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
-void main() {
+import 'Pages/loginPage.dart';
+import 'Pages/registerPage.dart';
+import 'firebase_options.dart';
+// Certifique-se de que este arquivo contém sua classe LoginScreen
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -10,50 +18,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Itens da API'),
-        ),
-        body: ListaItens(),
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home: HomeScreen(),
     );
   }
 }
 
-class ListaItens extends StatefulWidget {
-  @override
-  _ListaItensState createState() => _ListaItensState();
-}
-
-class _ListaItensState extends State<ListaItens> {
-  List _itens = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchData();
-  }
-
-  _fetchData() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:5000/itens'));
-    if (response.statusCode == 200) {
-      setState(() {
-        _itens = json.decode(response.body)['itens'];
-      });
-    } else {
-      throw Exception('Falha ao carregar dados da API');
-    }
-  }
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: _itens.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(_itens[index]['nome']),
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // Navega para a tela de registro
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                );
+              },
+              child: Text('Ir para Registro'),
+            ),
+            SizedBox(height: 20), // Espaço entre os botões
+            ElevatedButton(
+              onPressed: () {
+                // Navega para a tela de login
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+              child: Text('Ir para Login'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
