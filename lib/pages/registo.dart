@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'login.dart'; // Certifique-se de que o caminho está correto.
-import 'auth.dart'; // Certifique-se de que o caminho está correto.
+import 'package:flutter_svg/flutter_svg.dart';
+import 'login.dart'; // Verifique o caminho
+import 'auth.dart'; // Verifique o caminho
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Campos de texto para nome, sobrenome, email, senha e dropdown para sexo
+            // Campos de texto para email, senha e dropdown para sexo
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(labelText: 'Email'),
@@ -73,7 +74,14 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             DropdownButtonFormField<String>(
               value: _selectedGender,
-              hint: Text('Select Gender'),
+              decoration: InputDecoration(
+                labelText: 'Select Gender',
+                // Adiciona o ícone ao lado direito do dropdown
+                suffixIcon: Padding(
+                  padding: EdgeInsets.all(0),
+                  child: SvgPicture.asset('assets/icons/seta-direita.svg', width: 24, height: 24),
+                ),
+              ),
               onChanged: (newValue) {
                 setState(() {
                   _selectedGender = newValue;
