@@ -26,7 +26,7 @@ final Map<String, WidgetBuilder> categoryRoutes = {
     diets = DietModel.getDiets();
     popularDiets = PopularDietsModel.getPopularDiets();
   }
-
+/*
   @override
   Widget build(BuildContext context) {
     _getInitialInfo();
@@ -129,7 +129,84 @@ final Map<String, WidgetBuilder> categoryRoutes = {
         ],
       ),
     );
-  }
+  }*/
+@override
+Widget build(BuildContext context) {
+  _getInitialInfo(); // Se você estiver carregando categorias dinamicamente
+  return Scaffold(
+    appBar: appBar(),
+    body: ListView(
+      children: [
+        _searchField(),
+        const SizedBox(height: 40),
+        _buildCategorySection(context), // Chame aqui
+        // Adicione aqui outros widgets que deseja incluir, como _dietSection, por exemplo.
+        const SizedBox(height: 40),
+        // _dietSection(), // Descomente e ajuste conforme necessário.
+        // Adicione outras seções que você precisar aqui
+      ],
+    ),
+  );
+}
+
+Column _buildCategorySection(BuildContext context) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 20, top: 20),
+        child: Text(
+          'Categories',
+          style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      ),
+      const SizedBox(height: 10),
+      Container(
+        height: 120, // Altura do container que contém a lista horizontal
+        child: ListView.builder(
+          itemCount: categories.length, // Quantidade de categorias
+          scrollDirection: Axis.horizontal, // Lista horizontal
+          itemBuilder: (context, index) {
+            final category = categories[index]; // Categoria atual
+            return GestureDetector(
+              onTap: () {
+                // Navegação para a página baseada no nome da categoria
+                var pageBuilder = categoryRoutes[category.name];
+                if (pageBuilder != null) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: pageBuilder));
+                } else {
+                  // Se não encontrar uma rota para a categoria, mostra um erro (ou trate como achar melhor)
+                  print('Nenhuma página encontrada para ${category.name}');
+                }
+              },
+              child: Container(
+                width: 100, // Largura de cada item da categoria
+                margin: EdgeInsets.symmetric(horizontal: 10), // Espaçamento entre os itens
+                decoration: BoxDecoration(
+                  color: category.boxColor, // Cor de fundo baseada na categoria
+                  borderRadius: BorderRadius.circular(10), // Bordas arredondadas
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(category.iconPath, width: 50, height: 50), // Ícone da categoria
+                    SizedBox(height: 10), // Espaço entre ícone e texto
+                    Text(
+                      category.name, // Nome da categoria
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+
 
   Column _dietSection() {
     return Column(
