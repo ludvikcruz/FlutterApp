@@ -508,6 +508,7 @@ import 'package:test_drive/models/category_model.dart';
 import 'package:test_drive/models/diet_model.dart';
 import 'package:test_drive/models/popular_model.dart';
 import 'package:test_drive/pages/chatscreen.dart';
+import 'package:test_drive/pages/navbar.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -533,6 +534,7 @@ class HomePage extends StatelessWidget {
     _getInitialInfo();
     return Scaffold(
       appBar: _appBar(context),
+       MaterialPageRoute(builder: (context) => MainNavigationPage()),
       backgroundColor: Colors.white,
       body: ListView(
         children: [

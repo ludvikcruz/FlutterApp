@@ -24,7 +24,7 @@ class CategoryModel {
 
     categories.add(
       CategoryModel(
-        name: 'Cake',
+        name: 'Profile',
         iconPath: 'assets/icons/pancakes.svg',
         boxColor: Color(0xffEEA4CE)
       )
