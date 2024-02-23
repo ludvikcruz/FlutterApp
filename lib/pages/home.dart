@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test_drive/models/category_model.dart';
 import 'package:test_drive/models/diet_model.dart';
 import 'package:test_drive/models/popular_model.dart';
+import 'package:test_drive/pages/chatscreen.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -13,6 +14,12 @@ class HomePage extends StatelessWidget {
   List<CategoryModel> categories = [];
   List<DietModel> diets = [];
   List<PopularDietsModel> popularDiets = [];
+
+final Map<String, WidgetBuilder> categoryRoutes = {
+    'SphereChat': (_) => ChatScreen(),
+    // 'Cake': (_) => CakePage(),
+    // Adicione as outras categorias e suas páginas aqui
+  };
 
   void _getInitialInfo() {
     categories = CategoryModel.getCategories();
