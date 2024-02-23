@@ -69,12 +69,19 @@ class _RegisterPageState extends State<RegisterPage> {
         'lastName': lastName,
         'gender': gender,
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('Registrado com sucesso!'))
+  );
+
+  // Navega para a página de login após alguns segundos
+    Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => LoginPage()),
       );
-    }
-  } on FirebaseAuthException catch (e) {
+    });
+  }
+} on FirebaseAuthException catch (e) {
     // Trate erros de autenticação aqui
     print(e);
   }
