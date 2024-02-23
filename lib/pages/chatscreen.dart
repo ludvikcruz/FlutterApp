@@ -13,18 +13,22 @@ class _ChatScreenState extends State<ChatScreen> {
   String _enteredMessage = '';
 
   void _sendMessage() async {
-    FocusScope.of(context).unfocus();
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+  FocusScope.of(context).unfocus();
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
 
-    await FirebaseFirestore.instance.collection('chats/YOUR_CHAT_ID/messages').add({
-      'text': _enteredMessage,
-      'createdAt': Timestamp.now(),
-      'userId': user.uid,
-    });
+  // Substitua 'destinarary' pelo ID do destinatário da mensagem.
+  final String destinarary = 'ID_DO_DESTINATÁRIO_AQUI';
 
-    _controller.clear();
-  }
+  await FirebaseFirestore.instance.collection('chats/${user.uid}/messages').add({
+    'text': _enteredMessage,
+    'createdAt': Timestamp.now(),
+    'from': user.uid,
+    'to': destinarary,
+  });
+
+  _controller.clear();
+}
 
   @override
   Widget build(BuildContext context) {

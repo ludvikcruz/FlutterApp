@@ -15,7 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-
+  final TextEditingController _usernameController = TextEditingController();
  // final AuthService _authService = AuthService();
   String? _selectedGender;
 
@@ -26,37 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 /*
-  void _register(BuildContext context) async {
-    User? user = await _authService.registerWithEmailAndPassword(
-      _emailController.text,
-      _passwordController.text,
-    );
-
-    if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Erro no registro'),
-          content: Text('Não foi possível registrar. Por favor, tente novamente.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Fechar'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-    }
-  }*/
-
-
-
-  Future<void> registerUser(String email, String password, String firstName, String lastName, String gender) async {
+  Future<void> registerUser(String email, String password, String firstName, String lastName, String gender, String username) async {
   try {
     // Cria um novo usuário com Firebase Auth
     UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
@@ -68,6 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'firstName': firstName,
         'lastName': lastName,
         'gender': gender,
+        'username': username,
       });
       ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text('Registrado com sucesso!'))
@@ -85,6 +56,61 @@ class _RegisterPageState extends State<RegisterPage> {
     // Trate erros de autenticação aqui
     print(e);
   }
+}*/
+Future<void> registerUser(String email, String password, String firstName, String lastName, String gender, String username) async {
+  try {
+    // Verifica se o username já está em uso
+    bool usernameExists = await isUsernameTaken(username);
+    if (usernameExists) {
+      // Exibe um SnackBar de erro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('O username já está em uso. Por favor, escolha outro.')),
+      );
+      return; // Encerra a função sem registrar o usuário
+    }
+
+    // Cria um novo usuário com Firebase Auth
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    User? user = userCredential.user;
+
+    if (user != null) {
+      // Usuário criado com sucesso, agora salva os dados adicionais no Firestore
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'firstName': firstName,
+        'lastName': lastName,
+        'gender': gender,
+        'username': username,
+        'admin': false
+      });
+
+      // Exibe um SnackBar de sucesso
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registrado com sucesso!')),
+      );
+
+      // Navega para a página de login após alguns segundos
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      });
+    }
+  } on FirebaseAuthException catch (e) {
+    // Trate erros de autenticação aqui
+    print(e);
+  }
+}
+
+Future<bool> isUsernameTaken(String username) async {
+  // Consulta o Firestore para verificar se o username já está em uso
+  QuerySnapshot usernameQuery = await FirebaseFirestore.instance
+      .collection('users')
+      .where('username', isEqualTo: username)
+      .get();
+
+  // Retorna verdadeiro se houver um documento com o username fornecido
+  return usernameQuery.docs.isNotEmpty;
 }
 
 
@@ -103,7 +129,11 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Campos de texto para email, senha e dropdown para sexo
+            // Campos do formulario
+            TextFormField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
             TextFormField(
               controller: _firstNameController,
               decoration: InputDecoration(labelText: 'First Name'),
@@ -152,7 +182,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 _passwordController.text, 
                 _firstNameController.text, 
                 _lastNameController.text, 
-                _selectedGender ?? 'Other' // Garante que um valor seja passado mesmo se nenhum gênero for selecionado
+                _selectedGender ?? 'Other', // Garante que um valor seja passado mesmo se nenhum gênero for selecionado
+                _usernameController.text
               ),
               child: Text('Register'),
             ),
