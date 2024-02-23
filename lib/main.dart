@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test_drive/pages/inicial.dart';
+import 'package:test_drive/pages/login.dart';
 
 import 'pages/home.dart';
 
@@ -15,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Poppins'),
-      home: HomePage()
+      home: SplashPage()
+     
     );
   }
 }
