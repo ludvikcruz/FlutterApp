@@ -16,8 +16,8 @@ class CategoryModel {
     
     categories.add(
       CategoryModel(
-        name: 'Salad',
-        iconPath: 'assets/icons/plate.svg',
+        name: 'SphereChat',
+        iconPath: 'assets/icons/video-chamada.svg',
         boxColor: Color(0xff9DCEFF)
       )
     );
