@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'login.dart'; // Verifique o caminho
-import 'auth.dart'; // Verifique o caminho
+import 'package:flutter_svg/svg.dart';
+import 'login.dart'; // Verifique se o caminho está correto
+import 'auth.dart'; // Verifique se o caminho está correto
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -54,7 +54,11 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registro'),
+        title: Text('Register'),
+        leading: IconButton(
+          icon: SvgPicture.asset('assets/icons/voltar.svg'), // Ícone personalizado de voltar
+          onPressed: () => Navigator.of(context).pop(), // Ação para voltar para a tela anterior
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
@@ -62,6 +66,16 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             // Campos de texto para email, senha e dropdown para sexo
+            TextFormField(
+              // controller: _emailController,
+              decoration: InputDecoration(labelText: 'First Name'),
+              keyboardType: TextInputType.firstname,
+            ),
+            TextFormField(
+              // controller: _emailController,
+              decoration: InputDecoration(labelText: 'Last Name'),
+              keyboardType: TextInputType.lastname,
+            ),
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(labelText: 'Email'),
