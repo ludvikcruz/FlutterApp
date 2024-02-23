@@ -55,10 +55,7 @@ dev_dependencies:
 flutter:
 
   assets:
-    - assets/icons/C.svg
-    - assets/icons/D.svg
-    - assets/icons/Search.svg
-    - assets/icons/Filter.svg
+    - assets/icons/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
