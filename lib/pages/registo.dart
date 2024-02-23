@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
   );
 
   // Navega para a página de login após alguns segundos
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacement(
         context,
       MaterialPageRoute(builder: (context) => LoginPage()),
