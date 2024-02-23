@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,7 +13,10 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+
+ // final AuthService _authService = AuthService();
   String? _selectedGender;
 
   @override
@@ -21,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _passwordController.dispose();
     super.dispose();
   }
-
+/*
   void _register(BuildContext context) async {
     User? user = await _authService.registerWithEmailAndPassword(
       _emailController.text,
@@ -48,7 +52,34 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
     }
+  }*/
+
+
+
+  Future<void> registerUser(String email, String password, String firstName, String lastName, String gender) async {
+  try {
+    // Cria um novo usuário com Firebase Auth
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    User? user = userCredential.user;
+
+    if (user != null) {
+      // Usuário criado com sucesso, agora salva os dados adicionais no Firestore
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'firstName': firstName,
+        'lastName': lastName,
+        'gender': gender,
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    }
+  } on FirebaseAuthException catch (e) {
+    // Trate erros de autenticação aqui
+    print(e);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +98,12 @@ class _RegisterPageState extends State<RegisterPage> {
           children: <Widget>[
             // Campos de texto para email, senha e dropdown para sexo
             TextFormField(
-              // controller: _emailController,
+              controller: _firstNameController,
               decoration: InputDecoration(labelText: 'First Name'),
-              keyboardType: TextInputType.firstname,
             ),
             TextFormField(
-              // controller: _emailController,
+              controller: _lastNameController,
               decoration: InputDecoration(labelText: 'Last Name'),
-              keyboardType: TextInputType.lastname,
             ),
             TextFormField(
               controller: _emailController,
@@ -101,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   _selectedGender = newValue;
                 });
               },
-              items: <String>['Male', 'Female']
+              items: <String>['Male', 'Female','Other']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -111,7 +140,13 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _register(context),
+              onPressed: () => registerUser(
+                _emailController.text, 
+                _passwordController.text, 
+                _firstNameController.text, 
+                _lastNameController.text, 
+                _selectedGender ?? 'Other' // Garante que um valor seja passado mesmo se nenhum gênero for selecionado
+              ),
               child: Text('Register'),
             ),
             TextButton(
