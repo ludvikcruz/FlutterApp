@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_drive/pages/login.dart';
-import 'login.dart'; // Assegure-se de importar a página de login corretamente
+import 'package:test_drive/pages/login.dart'; // Assegure-se de importar a página de login corretamente
 
 class SplashPage extends StatefulWidget {
   @override
