@@ -1,12 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:test_drive/pages/inicial.dart';
-import 'package:test_drive/pages/login.dart';
-
-import 'pages/home.dart';
-
-import 'Pages/loginPage.dart';
-import 'Pages/registerPage.dart';
 import 'firebase_options.dart';
 // Certifique-se de que este arquivo contém sua classe LoginScreen
 
