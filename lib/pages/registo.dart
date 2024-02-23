@@ -1,29 +1,38 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:test_drive/pages/auth.dart';
-import 'package:test_drive/pages/login.dart';
+import 'login.dart'; // Certifique-se de que o caminho está correto.
+import 'auth.dart'; // Certifique-se de que o caminho está correto.
 
-class RegisterPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class RegisterPage extends StatefulWidget {
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
+  String? _selectedGender;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   void _register(BuildContext context) async {
     User? user = await _authService.registerWithEmailAndPassword(
-      emailController.text,
-      passwordController.text,
+      _emailController.text,
+      _passwordController.text,
     );
-    
+
     if (user != null) {
-      // Registro bem-sucedido, navegue para a próxima tela ou mostre sucesso
-      // Substitua 'YourHomeScreen()' pelo nome da tela para a qual você deseja navegar após o registro bem-sucedido
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
-      // Falha no registro, mostre uma mensagem de erro
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -32,45 +41,60 @@ class RegisterPage extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               child: Text('Fechar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         ),
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Registro'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            // Campos de texto para nome, sobrenome, email, senha e dropdown para sexo
             TextFormField(
-              controller: emailController,
+              controller: _emailController,
               decoration: InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
             ),
             TextFormField(
-              controller: passwordController,
+              controller: _passwordController,
               decoration: InputDecoration(labelText: 'Password'),
               obscureText: true,
+            ),
+            DropdownButtonFormField<String>(
+              value: _selectedGender,
+              hint: Text('Select Gender'),
+              onChanged: (newValue) {
+                setState(() {
+                  _selectedGender = newValue;
+                });
+              },
+              items: <String>['Male', 'Female']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _register(context),
-              child: Text('Registrar'),
+              child: Text('Register'),
             ),
             TextButton(
               child: Text('Already have an account? Login'),
               onPressed: () {
-                // Substitua 'YourLoginScreen()' pelo nome da sua tela de login
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),
