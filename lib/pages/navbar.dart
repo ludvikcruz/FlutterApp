@@ -1,56 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:test_drive/pages/home.dart';
-import 'package:test_drive/pages/perfil.dart';
-import 'package:test_drive/pages/settings.dart';
-import 'package:test_drive/models/category_model.dart';
+import 'home.dart'; // Importe sua HomePage
+import 'perfil.dart'; // Importe sua ProfilePage
+import 'settings.dart'; // Importe sua SettingsPage
 
-class MainNavigationPage extends StatefulWidget {
+class BasePage extends StatefulWidget {
+  final Widget body;
+  const BasePage({Key? key, required this.body}) : super(key: key);
+
   @override
-  _MainNavigationPageState createState() => _MainNavigationPageState();
+  _BasePageState createState() => _BasePageState();
 }
 
-class _MainNavigationPageState extends State<MainNavigationPage> {
+class _BasePageState extends State<BasePage> {
   int _selectedIndex = 0;
 
-  // Lista de páginas disponíveis
-  List<Widget> _pages = [
-    HomePage(), // Página inicial
-    ProfilePage(), // Página de perfil
-    SettingsPage(), // Página de configurações
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Função chamada quando um item da barra de navegação é selecionado
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    // Navegar para a página correspondente
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+        break;
+      case 1:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfilePage()));
+        break;
+      case 2:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: widget.body,
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }

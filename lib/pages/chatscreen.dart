@@ -17,7 +17,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return;
 
-  // Substitua 'destinarary' pelo ID do destinatário da mensagem.
+  // Substitua 'destinatary' pelo ID do destinatário da mensagem.
   final String destinarary = 'ID_DO_DESTINATÁRIO_AQUI';
 
   await FirebaseFirestore.instance.collection('chats/${user.uid}/messages').add({
